@@ -1,3 +1,4 @@
+
 const functions = require('firebase-functions');
 const NLP = require('google-nlp')
 const APP_ID = "cstudents";
@@ -17,6 +18,7 @@ let nlp = new NLP(APP_KEY)
 //   response.send("Hello from Firebase!");
 // });
 // [START language_quickstart]
+
 
 nlp.analyzeEntities( text ) 
 	.then(function( entities ) {
@@ -185,3 +187,4 @@ exports.makeMatch = functions.https.onCall(async (req, res) => {
         res.status(400).send({ message: "oops" });
     }
 });
+

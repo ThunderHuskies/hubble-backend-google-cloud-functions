@@ -7,21 +7,28 @@ fetch.Promise = Promise
 
 class NLP {
 
-    constructor(apiKey, prefix = 'v1beta1') {
+    constructor(apiKey, prefix = 'v1beta2') {
         this.prefix  = prefix;
 		this.baseURL = `https://language.googleapis.com/${this.prefix}`
 
 		if (apiKey) this.apiKey = apiKey
         else if (process.env.GOOGLE_API_KEY) this.apiKey = process.env.GOOGLE_API_KEY
         else throw Error( `The parameter 'apiKey' is required` )
-    }
+	}
+	
+	classifyText(text, type='PLAIN_TEXT', encodingType='UTF8'){
+		let url  = `${this.baseURL}/documents:classifyText?key=${this.apiKey}`
+		let opts = this.makeOpts(text, type, encodingType)
+
+		return this.fetch( url, opts )
+	}
 
     analyzeEntities(text, type='PLAIN_TEXT', encodingType='UTF8') {
 		let url  = `${this.baseURL}/documents:analyzeEntities?key=${this.apiKey}`
 		let opts = this.makeOpts(text, type, encodingType)
 
 		return this.fetch( url, opts )
-    }
+	}
 
     analyzeSentiment(text, type='PLAIN_TEXT', encodingType='UTF8') {
 		let url  = `${this.baseURL}/documents:analyzeSentiment?key=${this.apiKey}`
@@ -35,7 +42,7 @@ class NLP {
 		let opts = this.makeOpts(text, type, encodingType)
 
         return this.fetch( url, opts )
-    }
+	}
 
     annotateText(text, _features={syntax: true, entities: true, sentiment: true}, type='PLAIN_TEXT', encodingType='UTF8') {
 		let url      = `${this.baseURL}/documents:annotateText?key=${this.apiKey}`
