@@ -1,18 +1,11 @@
-const functions = require('firebase-functions');
-const NLP = require('google-nlp')
-const APP_ID = "cstudents";
-const APP_KEY = "AIzaSyCxLD3cVdT-gAFOg1RBlvqv44EFXaZZMKE";
+//const functions = require('firebase-functions');
+const axios = require("axios");
+const nlp = require("google-nlp");
 
-let nlp = new NLP(APP_KEY)
+const score = 0;
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
-// [START language_quickstart]
+const API_KEY = "AIzaSyDVD8Y4heWlSMmtW9V-kishv2QJhvawj_c"
+
 
 nlp.analyzeEntities( text ) 
 	.then(function( entities ) {
@@ -159,3 +152,4 @@ var hometownRating = 0;
 exports.matchMake = functions.https.onCall((data) => {
      averageRating(data[0], data.slice(1)); 
 });
+
