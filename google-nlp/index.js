@@ -21,9 +21,13 @@ nlp.analyzeEntities(text)
 	.then(function( entities ) {
 	// 	Output returned entities
 	//parsing and adding just the name entries into the firebase database
+	var entitiesList = [];
 	for (var i =0; i < entities.entities.length; i ++){
-		console.log(entities['entities'][i]["name"]);
+		var curr = entities['entities'][i]["name"];
+		//console.log(entities['entities'][i]["name"]);
+		entitiesList.push(curr);
 	}
+	console.log(entitiesList)
 })
 .catch(function( error ) {
 	// 	Error received, output the error
