@@ -1,36 +1,13 @@
-
 const functions = require('firebase-functions');
-const NLP = require('google-nlp')
 const APP_ID = "cstudents";
 const APP_KEY = "AIzaSyCxLD3cVdT-gAFOg1RBlvqv44EFXaZZMKE";
 const admin = require('firebase-admin');
+const { analyzeEntities } = require("./nlp")
+
 admin.initializeApp();
 
 const db = admin.firestore();
 
-let nlp = new NLP(APP_KEY)
-
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
-// [START language_quickstart]
-
-
-nlp.analyzeEntities( text ) 
-	.then(function( entities ) {
-        // 	Output returned entities
-        return entities; 
-	})
-	.catch(function( error ) {
-		// 	Error received, output the error
-		console.log( 'Error:', error.message );
-    })
-
- 
 var ageRating = 0; 
 var courseRating = 0; 
 var majorRating = 0; 
@@ -60,7 +37,6 @@ var hometownRating = 0;
         else if ((user1["age"] === user2["age"] + 5) || (user1["age"] === user2["age"] - 5)) {
             i.ageRating = 0; 
         }
-
         console.log(ageRating); 
     }
 
@@ -88,12 +64,11 @@ var hometownRating = 0;
         }
         console.log(courseRating); 
     }
-
  
     // function to analyze about 
     // about rating setter 
     function matchAbout(user1, user2) {
-        var aboutUser1 = nlp.analyzeEntities(user1["about"]);
+        var aboutUser1 = analyzeEntities(user1["about"]);
         var stringCourses = aboutUser1.toString();
         var aboutUser2 = user2["about"];
         for (var i = 0; i < user2.length; i++) {
@@ -106,7 +81,7 @@ var hometownRating = 0;
     // function to analyze majors
     // major rating setter 
     function matchMajor(user1, user2) {
-        var majorUser1 = nlp.analyzeEntities(user1["major"]);
+        var majorUser1 = analyzeEntities(user1["major"]);
         var stringCourses = majorUser1.toString();
         var majorUser2 = user2["major"];
         for (var i = 0; i < user2.length; i++) {
@@ -118,7 +93,7 @@ var hometownRating = 0;
     // analyze lookingFor
     // lookingFor rating setter 
     function matchlookingFor(user1, user2) {
-        var lookingForUser1 = nlp.analyzeEntities(user1["lookingFor"]);
+        var lookingForUser1 = analyzeEntities(user1["lookingFor"]);
         var stringCourses = lookingForUser1.toString();
         var lookingForUser2 = user2["lookingFor"];
         for (var i = 0; i < user2.length; i++) {
@@ -127,9 +102,8 @@ var hometownRating = 0;
         console.log(lookingForRating); 
     }
 
-      
     function matchClub(user1, user2) {
-        var clubUser1 = nlp.analyzeEntities(user1["clubs"]);
+        var clubUser1 = analyzeEntities(user1["clubs"]);
         var stringCourses = clubUser1.toString();
         var clubUser2 = user2["clubs"];
         for (var i = 0; i < user2.length; i++) {
@@ -139,7 +113,7 @@ var hometownRating = 0;
     }
       
     function matchHometown(user1, user2) {
-        var hometownUser1 = nlp.analyzeEntities(user1["hometown"]);
+        var hometownUser1 = analyzeEntities(user1["hometown"]);
         var stringCourses = hometownUser1.toString();
         var hometownUser2 = user2["hometown"];
         for (var i = 0; i < user2.length; i++) {
@@ -147,8 +121,6 @@ var hometownRating = 0;
         }
         console.log(hometownRating);
     }
-
-
 
     function averageRating(user, users) {
         for (let i = 0; i < users.size(); i++) {
@@ -176,15 +148,15 @@ exports.makeMatch = functions.https.onCall(async (req, res) => {
 
         // get current user
         const currentUser = await db.collection("users").doc(uid).get();
+        //error
         if (!currentUser.exists) return res.status(400).send({ message: "Invalid user ID" });
 
         let allUsers = await db.collection("users").get();
 
         await averageRating(currentUser, allUsers); 
-
+        
         res.send(allUsers);
     } catch (error) {
         res.status(400).send({ message: "oops" });
     }
 });
-
