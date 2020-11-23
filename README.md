@@ -1,4 +1,4 @@
-# cstudents-backend
-Backend for C Students
+# hubble-backend
+Backend for hubble
 
 Backend with use of Google Cloud Functions
