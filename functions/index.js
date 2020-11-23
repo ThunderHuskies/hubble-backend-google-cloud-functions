@@ -1,84 +1,33 @@
-
 const functions = require('firebase-functions');
-const NLP = require('google-nlp')
 const APP_ID = "cstudents";
 const APP_KEY = "AIzaSyCxLD3cVdT-gAFOg1RBlvqv44EFXaZZMKE";
 const admin = require('firebase-admin');
+const { analyzeEntities } = require("./nlp")
+
 admin.initializeApp();
 
 const db = admin.firestore();
 
-let nlp = new NLP(APP_KEY)
-
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
-// [START language_quickstart]
-
-
-nlp.analyzeEntities( text ) 
-	.then(function( entities ) {
-        // 	Output returned entities
-        return entities; 
-	})
-	.catch(function( error ) {
-		// 	Error received, output the error
-		console.log( 'Error:', error.message );
-    })
-
- 
-var ageRating = 0; 
-var courseRating = 0; 
-var majorRating = 0; 
-var schoolRating = 0; 
-var aboutRating = 0; 
-var foodRating = 0;
-var clubRating = 0; 
-var lookingForRating = 0; 
-var hometownRating = 0; 
-
-    // function to match age: 
-    //collections = the list of users
-    //compare user to every other user
-
+    // assigns rating based on the difference in age compared to the user.
     function matchAge(user1, user2) {
-        if (user1["age"] === user2["age"]) {
-            i["ageRating"] = 10; 
-        } else if ((user1["age"] === user2["age"] + 1) || (user1["age"] === user2["age"] - 1 )) {
-            i.ageRating = 8; 
-        } else if ((user1["age"] === user2["age"] + 2) || (user1["age"] === user2["age"] - 2 )) {
-            i.ageRating = 6; 
-        } else if ((user1["age"] === user2["age"] + 3) || (user1["age"] === user2["age"] - 3 )) {
-            i.ageRating = 4;
-        } else if ((user1["age"] === user2["age"] + 4) || (user1["age"] === user2["age"] - 4)) {
-            i.ageRating = 2; 
-        }
-        else if ((user1["age"] === user2["age"] + 5) || (user1["age"] === user2["age"] - 5)) {
-            i.ageRating = 0; 
-        }
-
-        console.log(ageRating); 
+        return ageRating = Math.max(10 - Math.abs(user1.age - user2.age) * 2, 0);
     }
 
 
-    // function to parse school:
-    // school rating setter 
+    // assign rating if user goes to same school
     function matchSchool(user1, user2) {
+        var schoolRating = 0; 
         if (user1["school"] === user2["school"]) {
              schoolRating = 10; 
         } else {
             schoolRating = 0; 
         }
-        console.log(schoolRating);
+        return schoolRating; 
       }
 
-    // function to anaylze text of courses
-    //course rating setter 
+    // assigns course rating based on other users course similarties to user 
     function matchCourse(user1, user2) {
+        var courseRating = 0; 
         let courses = user1.courses;
         for (let i = 0; i < courses.length; i ++) {
             let courseName = courses[i];
@@ -86,70 +35,71 @@ var hometownRating = 0;
                 courseRating += 2;
             }
         }
-        console.log(courseRating); 
+        return courseRating; 
     }
-
  
-    // function to analyze about 
-    // about rating setter 
+    // assigns aboutRating based on others users "about us" similarties to user
     function matchAbout(user1, user2) {
-        var aboutUser1 = nlp.analyzeEntities(user1["about"]);
+        var aboutRating = 0; 
+        var aboutUser1 = analyzeEntities(user1["about"]);
         var stringCourses = aboutUser1.toString();
         var aboutUser2 = user2["about"];
         for (var i = 0; i < user2.length; i++) {
             if (stringCourses.includes(aboutUser2[i])) {aboutRating += 1;}
         }
-
-        console.log(matchRating); 
+        return aboutRating; 
     }
 
-    // function to analyze majors
-    // major rating setter 
+    // assigns majorRating based on if user is in the same major as user
     function matchMajor(user1, user2) {
-        var majorUser1 = nlp.analyzeEntities(user1["major"]);
+        var majorRating = 0; 
+        var majorUser1 = analyzeEntities(user1["major"]);
         var stringCourses = majorUser1.toString();
         var majorUser2 = user2["major"];
         for (var i = 0; i < user2.length; i++) {
             if (stringCourses.includes(majorUser2[i])) {majorRating += 2;}
         }
-        console.log(majorRating); 
+        return majorRating; 
     }
 
-    // analyze lookingFor
-    // lookingFor rating setter 
+    
+    // assigns lookingForRating based on if users are looking for same thing 
     function matchlookingFor(user1, user2) {
-        var lookingForUser1 = nlp.analyzeEntities(user1["lookingFor"]);
-        var stringCourses = lookingForUser1.toString();
+        var lookingForRating = 0;
+        var lookingForUser1 = analyzeEntities(user1["lookingFor"]);
+        var stringCourses = lookingForUser1.toString().toLowerCase();
         var lookingForUser2 = user2["lookingFor"];
         for (var i = 0; i < user2.length; i++) {
             if (stringCourses.includes(lookingForUser2[i])) {lookingForRating += 1;}
         }
-        console.log(lookingForRating); 
+        return lookingForRating; 
     }
 
-      
+    // assigns clubRating based on if users are in the same club as user 
     function matchClub(user1, user2) {
-        var clubUser1 = nlp.analyzeEntities(user1["clubs"]);
-        var stringCourses = clubUser1.toString();
+        var clubRating = 0; 
+        var clubUser1 = analyzeEntities(user1["clubs"]);
+        var stringCourses = clubUser1.toString.toLowerCase();
         var clubUser2 = user2["clubs"];
         for (var i = 0; i < user2.length; i++) {
             if (stringCourses.includes(clubUser2[i])) {clubRating += 2;}
         }
-        console.log(clubRating); 
+        return clubRating; 
     }
-      
+    
+    // assigns hometownRating based on if users are in the same hometown as user
     function matchHometown(user1, user2) {
-        var hometownUser1 = nlp.analyzeEntities(user1["hometown"]);
-        var stringCourses = hometownUser1.toString();
+        var hometownRating = 0; 
+        var hometownUser1 = analyzeEntities(user1["hometown"]);
+        var stringCourses = hometownUser1.toString().toLowerCase();
         var hometownUser2 = user2["hometown"];
         for (var i = 0; i < user2.length; i++) {
-            if (stringCourses.includes(hometownUser2[i])) {hometownRating += 1;}
+            if (stringCourses.includes(hometownUser2[i].name.toLowerCase())) {hometownRating += 1;}
         }
-        console.log(hometownRating);
+        return hometownRating; 
     }
 
-
-
+    // calculate ratings for users
     function averageRating(user, users) {
         for (let i = 0; i < users.size(); i++) {
             const secondUser = users[i];
@@ -168,23 +118,19 @@ var hometownRating = 0;
         }
     }
 
-// matchmaking profile triggers when new user is created. 
-
 exports.makeMatch = functions.https.onCall(async (req, res) => {
     try {
         const uid = req.body.uid;
 
-        // get current user
         const currentUser = await db.collection("users").doc(uid).get();
         if (!currentUser.exists) return res.status(400).send({ message: "Invalid user ID" });
 
         let allUsers = await db.collection("users").get();
 
         await averageRating(currentUser, allUsers); 
-
+        
         res.send(allUsers);
     } catch (error) {
         res.status(400).send({ message: "oops" });
     }
 });
-
