@@ -14,7 +14,8 @@
   },
   "main": "index.js",
   "dependencies": {
-    "firebase-admin": "^8.10.0",
+    "@google-cloud/language": "^4.2.1",
+    "firebase-admin": "^9.4.1",
     "firebase-functions": "^3.6.1"
   },
   "devDependencies": {
@@ -24,5 +25,3 @@
   },
   "private": true
 }
-
-
