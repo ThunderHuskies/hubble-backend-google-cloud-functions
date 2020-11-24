@@ -2,7 +2,7 @@ const language = require("@google-cloud/language");
 
 const client = new language.LanguageServiceClient();
 
-exports.anaylzeEntites = async (text) => {
+exports.analyzeEntities = async (text) => {
   try {
     const document = {
       content: text,
@@ -12,7 +12,9 @@ exports.anaylzeEntites = async (text) => {
     const [result] = await client.analyzeEntities({ document: document });
     const entities = result.documentEntities;
 
+    return entities; 
+
   } catch (error) {
-    throw new Error();
+      throw new Error(); 
   }
 };
