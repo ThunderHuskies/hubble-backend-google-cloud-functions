@@ -66,11 +66,11 @@ function calculateRelativeUserRatings(currentUser, otherUsers) {
     }
 }
 
-function getAgeRating(user1, user2) {
+exports.getAgeRating = (user1, user2) => {
     return (ageRating = Math.max(10 - Math.abs(user1.age - user2.age) * 2, 0));
 }
 
-function getSchoolRating(user1, user2) {
+exports.getSchoolRating = (user1, user2) => {
     var schoolRating = 0;
     if (user1['school'] === user2['school']) {
         schoolRating = 10;
@@ -80,7 +80,7 @@ function getSchoolRating(user1, user2) {
     return schoolRating;
 }
 
-function getRelativeCourseRating(user1, user2) {
+exports.getRelativeCourseRating = (user1, user2) => {
     var courseRating = 0;
     let courses = user1.courses;
     for (let i = 0; i < courses.length; i++) {
@@ -92,26 +92,26 @@ function getRelativeCourseRating(user1, user2) {
     return courseRating;
 }
 
-function getAboutUsRating(user1, user2) {
+exports.getAboutUsRating = (user1, user2) => {
     var aboutRating = 0;
-    var aboutUser1 = analyzeEntities(user1['about']);
-    var stringCourses = aboutUser1.toString();
-    var aboutUser2 = user2['about'];
+    var aboutUser1 = analyzeEntities(user1['hobbies']);
+    var stringHobbies = aboutUser1.toString();
+    var aboutUser2 = user2['hobbies'];
     for (var i = 0; i < user2.length; i++) {
-        if (stringCourses.includes(aboutUser2[i])) {
+        if (stringHobbies.includes(aboutUser2[i])) {
             aboutRating += 1;
         }
     }
     return aboutRating;
 }
 
-function getMajorRating(user1, user2) {
+exports.getMajorRating = (user1, user2) => {
     var majorRating = 0;
     var majorUser1 = analyzeEntities(user1['major']);
-    var stringCourses = majorUser1.toString();
+    var stringMajor = majorUser1.toString();
     var majorUser2 = user2['major'];
     for (var i = 0; i < user2.length; i++) {
-        if (stringCourses.includes(majorUser2[i])) {
+        if (stringMajor.includes(majorUser2[i])) {
             majorRating += 2;
         }
     }
@@ -131,7 +131,7 @@ function getLookingForRating(user1, user2) {
     return lookingForRating;
 }
 
-function getClubRating(user1, user2) {
+exports.getClubRating = (user1, user2) => {
     var clubRating = 0;
     var clubUser1 = analyzeEntities(user1['clubs']);
     var stringCourses = clubUser1.toString().toLowerCase();
@@ -144,7 +144,7 @@ function getClubRating(user1, user2) {
     return clubRating;
 }
 
-function getHometownRating(user1, user2) {
+exports.getHometownRating = (user1, user2) => {
     var hometownRating = 0;
     var hometownUser1 = analyzeEntities(user1['hometown']);
     var stringCourses = hometownUser1.toString().toLowerCase();
