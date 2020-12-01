@@ -78,111 +78,99 @@ var user4 =   {
   "phone": "2349832212",
   "image": null,
   "uid": "VPxrgrmtYCqJccdBHi5u",
-  //"rating": 
 }
 
-//getAgeRating tests
-describe("makeMatch age gap 1", () => {
+describe("test getAgeRating with an age gap of 1", () => {
   it("should return 8", () => {
     assert.strictEqual(functions.getAgeRating(user1, user2), 8)
   }); 
 });
 
-describe("makeMatch age gap 3", () => {
+describe("test getAgeRating with an age gap of 3", () => {
   it("should return 4", () => {
     assert.strictEqual(functions.getAgeRating(user2, user3), 4)
   }); 
 });
 
-describe("makeMatch same age", () => {
+describe("test getAgeRating with an age gap of 0", () => {
   it("should return 10", () => {
     assert.strictEqual(functions.getAgeRating(user3, user4), 10)
   }); 
 });
 
-//getSchoolRating tests
-describe("makeMatch different school", () => {
+describe("test getSchoolRating with different school", () => {
   it("should return 0", () => {
     assert.strictEqual(functions.getSchoolRating(user1, user2), 0)
   }); 
 });
 
-describe("makeMatch same school", () => {
+describe("test getSchoolRating with the same school", () => {
   it("should return 10", () => {
     assert.strictEqual(functions.getSchoolRating(user2, user3), 10)
   }); 
 });
 
-//getRelativeCourseRating tests
-describe("makeMatch no courses match", () => {
+describe("test getRelativeCourseRating with no courses matching", () => {
   it("should return 0", () => {
     assert.strictEqual(functions.getRelativeCourseRating(user1, user2), 0)
   }); 
 });
 
-describe("makeMatch all courses match", () => {
+describe("test getRelativeCourseRating with all courses matching", () => {
   it("should return 6", () => {
     assert.strictEqual(functions.getRelativeCourseRating(user1, user3), 6)
   }); 
 });
 
-describe("makeMatch 1 course matches", () => {
+describe("test getRelativeCourseRating with 1 course matching", () => {
   it("should return 2", () => {
     assert.strictEqual(functions.getRelativeCourseRating(user3, user4), 2)
   }); 
 });
 
-//getAboutUsRating tests (getAboutUsRating may be broken)
-describe("makeMatch hobbies no similarities", () => {
+describe("test getAboutUsRating with no similarities", () => {
   it("should return 0", () => {
     assert.strictEqual(functions.getAboutUsRating(user1, user2), 0)
   }); 
 });
 
-//fails
-describe("makeMatch hobbies some similarities", () => {
+describe("test getAboutUsRating with some similarities", () => {
   it("should return 1", () => {
     assert.strictEqual(functions.getAboutUsRating(user1, user4), 1)
   }); 
 });
 
-//getMajorRating tests (analyzeEntities may not be working)
-//fails
-describe("makeMatch majors match", () => {
+describe("test getMajorRating where majors match", () => {
   it("should return 2", () => {
     assert.strictEqual(functions.getMajorRating(user1, user4), 2)
   }); 
 });
 
-describe("makeMatch majors don't match", () => {
+describe("test getMajorRating where majors don't match", () => {
   it("should return 0", () => {
     assert.strictEqual(functions.getMajorRating(user1, user3), 0)
   }); 
 });
 
-//getClubRating tests (check analyzeEntities)
-describe("makeMatch no clubs match", () => {
+describe("test getclubRating where no clubs match", () => {
   it("should return 0", () => {
     assert.strictEqual(functions.getClubRating(user1, user2), 0)
   }); 
 });
 
-//fails
-describe("makeMatch some clubs match", () => {
+describe("test getclubRating where some clubs match", () => {
   it("should return 2", () => {
     assert.strictEqual(functions.getClubRating(user1, user3), 2)
   }); 
 });
 
-//getHometownRating tests (check anaylzeEntities)
-describe("makeMatch hometown no match", () => {
+describe("test getHometownRating where hometown doesn't match", () => {
   it("should return 0", () => {
     assert.strictEqual(functions.getHometownRating(user2, user3), 0)
   }); 
 });
 
-//fails
-describe("makeMatch hometown match", () => {
+describe("test getHometownRating where hometown matches", () => {
   it("should return 1", () => {
     assert.strictEqual(functions.getHometownRating(user1, user4), 1)
   }); 

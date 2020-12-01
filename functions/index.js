@@ -66,11 +66,11 @@ function calculateRelativeUserRatings(currentUser, otherUsers) {
     }
 }
 
-exports.getAgeRating = (user1, user2) => {
+function getAgeRating(user1, user2) {
     return (ageRating = Math.max(10 - Math.abs(user1.age - user2.age) * 2, 0));
 }
 
-exports.getSchoolRating = (user1, user2) => {
+function getSchoolRating(user1, user2) {
     var schoolRating = 0;
     if (user1['school'] === user2['school']) {
         schoolRating = 10;
@@ -80,7 +80,7 @@ exports.getSchoolRating = (user1, user2) => {
     return schoolRating;
 }
 
-exports.getRelativeCourseRating = (user1, user2) => {
+function getRelativeCourseRating(user1, user2) {
     var courseRating = 0;
     let courses = user1.courses;
     for (let i = 0; i < courses.length; i++) {
@@ -92,7 +92,7 @@ exports.getRelativeCourseRating = (user1, user2) => {
     return courseRating;
 }
 
-exports.getAboutUsRating = (user1, user2) => {
+function getAboutUsRating(user1, user2) {
     var aboutRating = 0;
     var aboutUser1 = analyzeEntities(user1['hobbies']);
     var stringHobbies = aboutUser1.toString();
@@ -105,7 +105,7 @@ exports.getAboutUsRating = (user1, user2) => {
     return aboutRating;
 }
 
-exports.getMajorRating = (user1, user2) => {
+function getMajorRating(user1, user2) {
     var majorRating = 0;
     var majorUser1 = analyzeEntities(user1['major']);
     var stringMajor = majorUser1.toString();
@@ -131,7 +131,7 @@ function getLookingForRating(user1, user2) {
     return lookingForRating;
 }
 
-exports.getClubRating = (user1, user2) => {
+function getClubRating(user1, user2) {
     var clubRating = 0;
     var clubUser1 = analyzeEntities(user1['clubs']);
     var stringCourses = clubUser1.toString().toLowerCase();
@@ -144,7 +144,7 @@ exports.getClubRating = (user1, user2) => {
     return clubRating;
 }
 
-exports.getHometownRating = (user1, user2) => {
+function getHometownRating(user1, user2) {
     var hometownRating = 0;
     var hometownUser1 = analyzeEntities(user1['hometown']);
     var stringCourses = hometownUser1.toString().toLowerCase();
