@@ -94,11 +94,11 @@ function getRelativeCourseRating(user1, user2) {
 
 function getAboutUsRating(user1, user2) {
     var aboutRating = 0;
-    var aboutUser1 = analyzeEntities(user1['about']);
-    var stringCourses = aboutUser1.toString();
-    var aboutUser2 = user2['about'];
+    var aboutUser1 = analyzeEntities(user1['hobbies']);
+    var stringHobbies = aboutUser1.toString();
+    var aboutUser2 = user2['hobbies'];
     for (var i = 0; i < user2.length; i++) {
-        if (stringCourses.includes(aboutUser2[i])) {
+        if (stringHobbies.includes(aboutUser2[i])) {
             aboutRating += 1;
         }
     }
@@ -108,10 +108,10 @@ function getAboutUsRating(user1, user2) {
 function getMajorRating(user1, user2) {
     var majorRating = 0;
     var majorUser1 = analyzeEntities(user1['major']);
-    var stringCourses = majorUser1.toString();
+    var stringMajor = majorUser1.toString();
     var majorUser2 = user2['major'];
     for (var i = 0; i < user2.length; i++) {
-        if (stringCourses.includes(majorUser2[i])) {
+        if (stringMajor.includes(majorUser2[i])) {
             majorRating += 2;
         }
     }
