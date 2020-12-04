@@ -8,7 +8,7 @@ admin.initializeApp();
 const db = admin.firestore();
 
 // assign rating for other users based on user
-exports.findMatches = functions.https.onRequest(async (req, res) => {
+exports.findMatches = functions.https.onCall(async (req, res) => {
     try {
         const uid = req.body.uid;
         await Promise.all([
