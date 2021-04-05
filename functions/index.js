@@ -4,30 +4,30 @@ const { analyzeEntities } = require('./nlp');
 const { HttpsError } = require('firebase-functions/lib/providers/https');
 
 admin.initializeApp();
+firebase.functions().useFunctionsEmulator('http://localhost:5000') 
 
 const db = admin.firestore();
 
 // assign rating for other users based on user
-exports.findMatches = functions.https.onCall(async (req, res) => {
+exports.findMatches = functions.https.onCall(data, context => {
     try {
-        const uid = req.body.uid;
-        await Promise.all([
-            db.collection('users').doc(uid).get(),
-            db.collection('users').get(),
-        ]).then(([currentUser, allUsers]) => {
+        const uid = context.auth.uid;
+        return db.collection('users').doc(uid).get()({
+            // db.collection('users').get(),
+        }).then(([currentUser, allUsers]) => {
             if (!currentUser || !allUsers)
-                throw new HttpsError('failed-precondition', 'No users found');
+                throw new functions.https.HttpsError('failed-precondition', 'No users found');
 
             const usersWithRatings = calculateRelativeUserRatings(
                 currentUser.data(),
                 allUsers,
             );
 
-            return res.send(usersWithRatings);
+            return usersWithRatings;
         });
     } catch (error) {
-        res.status(400).send({ message: error.message });
-        throw new HttpsError('internal', error);
+        // res.status(400).send({ message: error.message });
+        throw new functions.https.HttpsError('internal', error);
     }
 });
 
