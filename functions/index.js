@@ -4,30 +4,30 @@ const { analyzeEntities } = require('./nlp');
 const { HttpsError } = require('firebase-functions/lib/providers/https');
 
 admin.initializeApp();
-firebase.functions().useFunctionsEmulator('http://localhost:5000') 
 
 const db = admin.firestore();
 
 // assign rating for other users based on user
-exports.findMatches = functions.https.onCall(data, context => {
+exports.findMatches = functions.https.onRequest(async (req, res) => {
     try {
-        const uid = context.auth.uid;
-        return db.collection('users').doc(uid).get()({
-            // db.collection('users').get(),
-        }).then(([currentUser, allUsers]) => {
+        const uid = req.body.uid;
+        await Promise.all([
+            db.collection('users').doc(uid).get(),
+            db.collection('users').get(),
+        ]).then(([currentUser, allUsers]) => {
             if (!currentUser || !allUsers)
-                throw new functions.https.HttpsError('failed-precondition', 'No users found');
+                throw new HttpsError('failed-precondition', 'No users found');
 
             const usersWithRatings = calculateRelativeUserRatings(
                 currentUser.data(),
                 allUsers,
             );
 
-            return usersWithRatings;
+            return res.send(usersWithRatings);
         });
     } catch (error) {
-        // res.status(400).send({ message: error.message });
-        throw new functions.https.HttpsError('internal', error);
+        res.status(400).send({ message: error.message });
+        throw new HttpsError('internal', error);
     }
 });
 
@@ -49,13 +49,15 @@ function calculateRelativeUserRatings(currentUser, otherUsers) {
         const ratedUsers = [];
 
         for (const user of users) {
-            const r1 = getRelativeCourseRating(currentUser, user) * 3;
+            const r1 = getRelativeCourseRating(currentUser, user) * 8;
             const r2 = getAgeRating(currentUser, user);
-            const r3 = getSchoolRating(currentUser, user) * 5;
-            const r4 = getMajorRating(currentUser, user) * 3;
-            const r6 = getClubRating(currentUser, user);
-            const r7 = getHometownRating(currentUser, user);
-            user.rating = (r1 + r2 + r3 + r4 + r6 + r7) / 14;
+            const r3 = getSchoolRating(currentUser, user);
+            const r4 = getMajorRating(currentUser, user) * 24;
+            const r6 = getClubRating(currentUser, user) * 12;
+            const r7 = getHometownRating(currentUser, user) * 4;
+            const r8 = getAboutUsRating(currentUser, user) * 4; 
+            const r9 = getLookingForRating(currentUser, user) * 16; 
+            user.rating = (r1 + r2 + r3 + r4 + r6 + r7 + r8 + r9) / 8;
 
             ratedUsers.push(user);
         }
