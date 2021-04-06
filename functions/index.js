@@ -49,13 +49,15 @@ function calculateRelativeUserRatings(currentUser, otherUsers) {
         const ratedUsers = [];
 
         for (const user of users) {
-            const r1 = getRelativeCourseRating(currentUser, user) * 3;
+            const r1 = getRelativeCourseRating(currentUser, user) * 8;
             const r2 = getAgeRating(currentUser, user);
-            const r3 = getSchoolRating(currentUser, user) * 5;
-            const r4 = getMajorRating(currentUser, user) * 3;
-            const r6 = getClubRating(currentUser, user);
-            const r7 = getHometownRating(currentUser, user);
-            user.rating = (r1 + r2 + r3 + r4 + r6 + r7) / 14;
+            const r3 = getSchoolRating(currentUser, user);
+            const r4 = getMajorRating(currentUser, user) * 24;
+            const r6 = getClubRating(currentUser, user) * 12;
+            const r7 = getHometownRating(currentUser, user) * 4;
+            const r8 = getAboutUsRating(currentUser, user) * 4; 
+            const r9 = getLookingForRating(currentUser, user) * 16; 
+            user.rating = (r1 + r2 + r3 + r4 + r6 + r7 + r8 + r9) / 8;
 
             ratedUsers.push(user);
         }
