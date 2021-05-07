@@ -1,4 +1,6 @@
-# hubble-backend
-Backend for hubble
+# hubble's emoji algorithm 
+Data Scoring Algorithm to score user compatability for hubble -> hubbleapp.dev
 
-Backend with use of Google Cloud Functions
+Uses Google's Natural Language Processing API entity & sentiment analysis. 
+
+Deployed serverless on Google Cloud - Cloud Functions
